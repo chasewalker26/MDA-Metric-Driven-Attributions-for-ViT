@@ -41,7 +41,8 @@ python3 MDATest.py --function Calibrate --model VIT_tiny_16 --image_count 5000 -
 <h3>ImageNet Segmentation Tests (Table 2)</h3>
 
 Point these tests to the following dataset:
-* [Link To Download Dataset](http://calvin-vision.net/bigstuff/proj-imagenet/data/gtsegs_ijcv.mat)
+
+http://calvin-vision.net/bigstuff/proj-imagenet/data/gtsegs_ijcv.mat
 
 
 ```
@@ -108,6 +109,7 @@ python3 MDATestMonotonicity.py --function Calibrate_Del --model VIT_base_32 --im
 ```
 
 <h3>Tau Ablation Study (Figure 7, Tables 7, 8, 9)</h3>
+
 ```
 python3 MDATest.py --function Calibrate_Cutoff --cutoff 0 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
 python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.1 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
@@ -168,5 +170,3 @@ python3 makeMDApdf.py --model VIT_base_16  --imagenet ../../../ImageNet/ --gpu 0
 python3 makeMDApdf.py --model VIT_tiny_16  --imagenet ../../../ImageNet/ --gpu 0
 python3 makeMDApdf.py --model VIT_base_32  --imagenet ../../../ImageNet/ --gpu 0
 ```
-
-http://calvin-vision.net/bigstuff/proj-imagenet/data/gtsegs_ijcv.mat
