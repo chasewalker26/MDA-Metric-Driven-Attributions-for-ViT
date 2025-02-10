@@ -3,9 +3,6 @@ The official implementation of "Metric-Driven Attributions for Vision Transforme
 
  * Official Paper - [TBR]()
 
-## Datasets
-Place the ImageNet dataset in the project root folder.
-
 ## How to Use MDA
 See `example.ipynb` for a full example of the application of the MDA source code compared with SOTA ViT attribution methods.
 
