@@ -1,0 +1,281 @@
+import torch
+import torch.nn as nn
+from torchvision import transforms
+import csv
+import argparse
+import time
+import numpy as np
+from PIL import Image
+import os
+import warnings
+from torchvision import models
+from skimage.segmentation import slic
+from skimage.util import img_as_float
+from skimage.transform import resize as skimage_resize
+os.sys.path.append(os.path.dirname(os.path.abspath('..')))
+
+from util import model_utils
+from util.test_methods import MASTestFunctions as MAS
+from util.attribution_methods.VIT_LRP.ViT_explanation_generator import Baselines, LRP
+from util.attribution_methods import MDAFunctions
+
+# models
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from util.attribution_methods.VIT_LRP.ViT_new_timm import vit_tiny_patch16_224 as vit_new_tiny_16
+    from util.attribution_methods.VIT_LRP.ViT_LRP_timm import vit_tiny_patch16_224 as vit_LRP_tiny_16
+    from util.attribution_methods.VIT_LRP.ViT_new_timm import vit_base_patch16_224 as vit_new_base_16
+    from util.attribution_methods.VIT_LRP.ViT_LRP_timm import vit_base_patch16_224 as vit_LRP_base_16
+    from util.attribution_methods.VIT_LRP.ViT_new_timm import vit_base_patch32_224 as vit_new_base_32
+    from util.attribution_methods.VIT_LRP.ViT_LRP_timm import vit_base_patch32_224 as vit_LRP_base_32
+model = None
+
+# standard ImageNet normalization
+transform_normalize_VIT = transforms.Normalize(
+    mean=[0.5, 0.5, 0.5],
+    std=[0.5, 0.5, 0.5]
+)
+
+# standard ImageNet normalization
+transform_normalize_RES = transforms.Normalize(
+    mean=[0.485, 0.456, 0.406],
+    std=[0.229, 0.224, 0.225]
+)
+
+
+resize = transforms.Resize((224, 224), antialias = True)
+
+# runs an attribution method w 3 baselines over imageCount images and calculates the mean PIC
+def run_and_save_tests(img_hw, image_count, function, transform, model, explainer, LRP_explainer, model_name, device, imagenet, batch_size):
+    # num imgs used for testing
+    img_label = str(image_count) + "_images_"
+
+    # this tracks images that are classified correctly
+    correctly_classified = np.loadtxt("../../util/class_maps/ImageNet/correctly_classified_" + model_name + ".txt").astype(np.int64)
+
+    num_classes = 1000
+    images_per_class = int(np.ceil(image_count / num_classes))
+    classes_used = [0] * num_classes
+
+    fields = ["Kappa Value", "Rise Ins", "Rise Del", "Rise Ins - Del", "MAS Ins", "MAS Del", "MAS Ins - Del"]
+    kappa_array = [0, 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10, 15, 20, 25]
+    scores = np.zeros(((len(kappa_array)), len(fields)))
+
+
+    for i in range(len(kappa_array)):
+        scores[i, 0] = kappa_array[i]
+
+    images = sorted(os.listdir(imagenet))
+    images_used = 0
+
+    if model_name == "R101":
+        segment_count = 14 ** 2
+    elif model_name == "VIT_tiny_16":
+        segment_count = 14 ** 2
+    elif model_name == "VIT_base_16":
+        segment_count = 14 ** 2
+    elif model_name == "VIT_base_32":
+        segment_count = 7 ** 2
+
+    normalized_model_response_array = np.zeros((segment_count + 1,))
+ 
+    total_time = 0
+
+    # look at test images in order from 1
+    for image in images:    
+        if images_used == image_count:
+            print("method finished")
+            break
+
+        begin = time.time()
+
+        # check if the current image is an invalid image for testing, 0 indexed
+        image_num = int((image.split("_")[2]).split(".")[0]) - 1
+        # check if the current image is an invalid image for testing
+        if correctly_classified[image_num] == 0:
+            continue
+
+        img = Image.open(imagenet + "/" + image)
+        trans_img = transform(img)
+
+        # put the image in form needed for prediction for the ins/del method
+        if model_name == "VIT_tiny_16":
+            img_tensor = transform_normalize_VIT(trans_img)
+        elif model_name == "VIT_base_16":
+            img_tensor = transform_normalize_VIT(trans_img)
+        elif model_name == "VIT_base_32":
+            img_tensor = transform_normalize_VIT(trans_img)
+        elif model_name == "R101":
+            img_tensor = transform_normalize_RES(trans_img)
+        img_tensor = torch.unsqueeze(img_tensor, 0).to(device)
+
+        # only rgb images can be classified
+        if trans_img.shape != (3, img_hw, img_hw):
+            continue
+
+        target_class = model_utils.getClass(img_tensor, model, device)
+        original_pred = model_utils.getPrediction(img_tensor, model, device, target_class)[0] * 100
+        if original_pred < 60:
+            continue
+
+        # Track which classes have been used
+        if classes_used[target_class] == images_per_class:
+            continue
+        else:
+            classes_used[target_class] += 1       
+
+        klen = 31
+        ksig = 31
+        kern = MAS.gkern(klen, ksig)
+        blur = lambda x: nn.functional.conv2d(x, kern, padding = klen // 2)
+        blur_pred = model_utils.getPrediction(blur(img_tensor.cpu()).to(device), model, device, target_class)[0] * 100
+        # choose a blurring kernel that results in a softmax score of 1% or less 
+        while blur_pred > 1 and klen <= 101:
+            klen += 2
+            ksig += 2
+            kern = MAS.gkern(klen, ksig)
+            blur = lambda x: nn.functional.conv2d(x, kern, padding = klen // 2)
+            blur_pred = model_utils.getPrediction(blur(img_tensor.cpu()).to(device), model, device, target_class)[0] * 100
+
+        if klen > 101:
+          classes_used[target_class] -= 1
+          continue
+
+        MAS_insertion = MAS.MASMetric(model, img_hw * img_hw, 'ins', img_hw, substrate_fn = blur)
+        MAS_deletion = MAS.MASMetric(model, img_hw * img_hw, 'del', img_hw, substrate_fn = torch.zeros_like)
+
+        print(model_name + " Function " + function + ", image: " + image)
+
+        segment_img = np.transpose(trans_img.squeeze().detach().numpy(), (1, 2, 0))
+        segment_img = img_as_float(segment_img)
+        segments = torch.tensor(slic(segment_img, n_segments=segment_count, compactness=10000, start_label=0), dtype = int)
+        attr_attr, _ = explainer.bidirectional(img_tensor, target_class, device = device)
+        reference_attr = resize(attr_attr.cpu().detach()).permute(1, 2, 0).cpu().numpy() * np.ones((224, 224, 3))
+        upsize = transforms.Resize((224, 224), transforms.InterpolationMode.NEAREST_EXACT)
+        downsize = transforms.Resize(int(segment_count ** (1/2)))
+        saliency_map_segmented = upsize(downsize(torch.tensor(reference_attr, dtype = torch.float).permute((2, 0, 1)))).permute((1, 2, 0))
+        _, _, order_a, MR_ins = MDAFunctions.find_insertion_patches(img_tensor.cpu(), saliency_map_segmented, segments, blur, segment_count, type = 1, model = model, device = device, img_hw = img_hw, max_batch_size = batch_size)
+        end_index = np.where(MR_ins >= 0.9)[0][0]
+        new_map_dense_orig, segments, best_segment_list, normalized_model_response, ones_map, n_steps = MDAFunctions.find_deletion_patches(img_tensor.cpu(), segments, saliency_map_segmented, order_a[0 : end_index + 1], blur, segment_count, model, device, img_hw, max_batch_size = batch_size, test_kappa = True)
+        
+        # testing various kappa values
+        for i in range(len(kappa_array)):
+            new_map_dense = new_map_dense_orig.clone()
+            for j in range(1, n_steps):
+                segment_coords = torch.where(segments.flatten() == best_segment_list[j-1])[0]
+                target_MR = normalized_model_response[j - 1] - normalized_model_response[j]
+                attr_value = 1 / len(segment_coords) * target_MR + (target_MR * (n_steps - j) / n_steps) 
+
+                if attr_value >= (kappa_array[i] / 100):
+                    new_map_dense.reshape(img_hw ** 2)[segment_coords] = ones_map.reshape(img_hw ** 2)[segment_coords] * ((n_steps - j) / n_steps)
+                else:
+                    new_map_dense.reshape(img_hw ** 2)[segment_coords] = ones_map.reshape(img_hw ** 2)[segment_coords] * attr_value
+
+            saliency_map = new_map_dense.unsqueeze(2) * torch.ones((224, 224, 3))
+            saliency_map = saliency_map.detach().cpu().numpy()
+
+            # Get attribution scores
+            saliency_map_test = np.abs(np.sum(saliency_map, axis = 2, keepdims=True))
+
+            # make sure attribution is valid
+            if np.sum(saliency_map_test.reshape(1, 1, img_hw ** 2)) == 0:
+                print("Skipping Image due to 0 attribution")
+                classes_used[target_class] -= 1
+                continue
+
+            ins_del_img = img_tensor.cpu()
+            _, corrected_score_i, _, _, raw_score_i = MAS_insertion.single_run(ins_del_img, saliency_map_test, device, max_batch_size = batch_size)
+            _, corrected_score_d, _, _, raw_score_d = MAS_deletion.single_run(ins_del_img, saliency_map_test, device, max_batch_size = batch_size)
+
+            scores[i, 1] += MAS.auc(raw_score_i)
+            scores[i, 2] += MAS.auc(raw_score_d)
+            scores[i, 3] += MAS.auc(raw_score_i) - MAS.auc(raw_score_d)
+            scores[i, 4] += MAS.auc(corrected_score_i)
+            scores[i, 5] += MAS.auc(corrected_score_d)
+            scores[i, 6] += MAS.auc(corrected_score_i) - MAS.auc(corrected_score_d)
+
+        normalized_model_response_array += normalized_model_response
+
+
+        # when all tests have passed, the number of images used can go up by 1
+        images_used += 1
+
+        print("Total used: " + str(images_used) + " / " + str(image_count))
+
+        print(time.time() - begin)
+
+    print("Time Elapsed = " + str(total_time / images_used))
+
+    scores /= images_used 
+    scores = scores.round(3)
+
+    normalized_model_response /= images_used 
+    normalized_model_response = normalized_model_response.round(3)
+
+    # make the test folder if it doesn't exist
+    folder = "test_results_init/imagenet/"
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
+    img_label = model_name + "_" + function + "_" + str(image_count) + "_images"
+    with open(folder + img_label + ".csv", 'w') as f:
+        write = csv.writer(f)
+        write.writerow(fields)
+        write.writerows(np.asarray(scores))
+        write.writerow(np.asarray(normalized_model_response_array))
+    return
+
+def main(FLAGS):
+    device = 'cuda:' + str(FLAGS.gpu) if torch.cuda.is_available() else 'cpu'
+
+    model_name = FLAGS.model
+
+    batch_size = 25
+
+    if model_name == "VIT_tiny_16":
+        model = vit_new_tiny_16(pretrained=True).to(device).eval()
+        model_lrp = vit_LRP_tiny_16(pretrained=True).to(device).eval()
+        explainer = Baselines(model)
+        LRP_explainer = LRP(model_lrp)
+    elif model_name == "VIT_base_16":
+        model = vit_new_base_16(pretrained=True).to(device).eval()
+        model_lrp = vit_LRP_base_16(pretrained=True).to(device).eval()
+        explainer = Baselines(model)
+        LRP_explainer = LRP(model_lrp)
+    elif model_name == "VIT_base_32":
+        model = vit_new_base_32(pretrained=True).to(device).eval()
+        model_lrp = vit_LRP_base_32(pretrained=True).to(device).eval()
+        explainer = Baselines(model)
+        LRP_explainer = LRP(model_lrp)
+
+    img_hw = 224
+    transform = transforms.Compose([
+        transforms.Resize(img_hw),
+        transforms.CenterCrop(img_hw),
+        transforms.ToTensor()
+    ])
+
+    run_and_save_tests(img_hw, FLAGS.image_count, FLAGS.function, transform, model, explainer, LRP_explainer, model_name, device, FLAGS.imagenet, batch_size)
+
+if __name__ == "__main__":
+    # Set parameters for Sparse Autoencoder
+    parser = argparse.ArgumentParser('Attribution Test Script.')
+    parser.add_argument('--function',
+                        type = str, default = "Calibrate_Kappa",
+                        help = 'Name of the attribution method to use: .')
+    parser.add_argument('--model',
+                        type = str, default = "VIT_base_16",
+                        help = 'Name of the model to use: VIT_tiny_16, VIT_base_32, VIT_base_16.')
+    parser.add_argument('--image_count',
+                        type = int, default = 5000,
+                        help='How many images to test with.')
+    parser.add_argument('--gpu',
+                        type=int, default = 0,
+                        help='The number of the GPU you want to use.')
+    parser.add_argument('--imagenet',
+                type = str, default = "imagenet",
+                help = 'The path to your 2012 imagenet validation set. Images in this folder should have the name structure: "ILSVRC2012_val_00000001.JPEG".')
+    
+    FLAGS, unparsed = parser.parse_known_args()
+    
+    main(FLAGS)

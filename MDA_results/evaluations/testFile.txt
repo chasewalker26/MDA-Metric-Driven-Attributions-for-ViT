@@ -1,0 +1,285 @@
+Main results
+
+----- main comparison
+
+python3 MDATest.py --function GC --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function IG --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function LRP --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function VIT_CX --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Bidirectional --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Transition_attn --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function TIS --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate --model VIT_base_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 0
+
+
+python3 MDATest.py --function GC --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function IG --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function LRP --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function VIT_CX --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function Bidirectional --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 2
+python3 MDATest.py --function Transition_attn --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 2
+python3 MDATest.py --function TIS --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 2
+python3 MDATest.py --function Calibrate --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 2
+
+
+python3 MDATest.py --function GC --model VIT_base_32 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 3
+python3 MDATest.py --function IG --model VIT_base_32 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 3
+python3 MDATest.py --function LRP --model VIT_base_32 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 3
+python3 MDATest.py --function VIT_CX --model VIT_base_32 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 3
+python3 MDATest.py --function Bidirectional --model VIT_base_32 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 3
+python3 MDATest.py --function Transition_attn --model VIT_base_32 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 3
+python3 MDATest.py --function TIS --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 2
+python3 MDATest.py --function Calibrate --model VIT_tiny_16 --image_count 5000 --imagenet ../../../ImageNet/ --gpu 2
+
+----- vary tau
+
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.1 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.2 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.3 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.4 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.5 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.6 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.7 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.8 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 0.9 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Cutoff --cutoff 1 --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+
+
+Supplementary results
+
+---- Compare ins, del, both against other methods 
+
+python3 MDATest.py --function Calibrate --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Ins --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Calibrate_Del --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+python3 MDATest.py --function GC --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function IG --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Transition_attn --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function LRP --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function Bidirectional --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function TIS --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATest.py --function VIT_CX --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+python3 MDATest.py --function Calibrate --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function Calibrate_Ins --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function Calibrate_Del --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+
+python3 MDATest.py --function GC --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function IG --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function Transition_attn --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function LRP --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function Bidirectional --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function TIS --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+python3 MDATest.py --function VIT_CX --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 1
+
+
+----- PDF creation
+
+py -3 makeMDApdf.py --model VIT_base_32  --imagenet ../../../../../ImageNet/ILSVRC2012_img_val/
+py -3 makeMDApdf.py --model VIT_base_16  --imagenet ../../../../../ImageNet/ILSVRC2012_img_val/
+py -3 makeMDApdf.py --model VIT_tiny_16  --imagenet ../../../../../ImageNet/ILSVRC2012_img_val/
+python3 makeMDApdf.py --model VIT_base_16  --imagenet ../../../ImageNet/ --gpu 0
+python3 makeMDApdf.py --model VIT_tiny_16  --imagenet ../../../ImageNet/ --gpu 0
+
+
+
+Rebuttal results
+
+----- segmentation
+
+python3 imagenet_seg_eval.py --method GC --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method IG --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method VIT_CX --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method Transition_attn --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method LRP --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method Bidirectional --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method TIS --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method Calibrate_Best_Possible --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+python3 imagenet_seg_eval.py --method SHAP --imagenet-seg-path ../../../gtsegs_ijcv.mat --gpu 0 --model VIT_base_32 --acc_cutoff 10
+
+----- perturbation
+
+python3 generate_visualizations.py --method IG  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method GC  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method LRP  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method Transition_attn  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method Bidirectional  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method TIS  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method VIT_CX  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method Calibrate_Sparse  --imagenet-validation-path ../../../ --vis-class top
+python3 generate_visualizations.py --method Calibrate_Dense  --imagenet-validation-path ../../../ --vis-class top
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class top
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class top
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class top
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class top
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class top
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class top
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class top
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Sparse --vis-class top
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Dense --vis-class top
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Sparse --vis-class top --neg
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Dense --vis-class top --neg
+
+python3 generate_visualizations.py --method IG  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method GC  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method LRP  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method Transition_attn  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method Bidirectional  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method TIS  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method VIT_CX  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method Calibrate_Sparse  --imagenet-validation-path ../../../ --vis-class target
+python3 generate_visualizations.py --method Calibrate_Dense  --imagenet-validation-path ../../../ --vis-class target
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class target
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class target
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class target
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class target
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class target
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class target
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class target
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Sparse --vis-class target
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Dense --vis-class target
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Sparse --vis-class target --neg
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Dense --vis-class target --neg
+
+
+
+
+32 x 32
+
+python3 generate_visualizations.py --method IG  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method GC  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method LRP  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method Transition_attn  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method Bidirectional  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method TIS  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method VIT_CX  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method Calibrate_Ins  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 generate_visualizations.py --method Calibrate_Del  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+
+python3 generate_visualizations.py --method IG  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method GC  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method LRP  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method Transition_attn  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method Bidirectional  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method TIS  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method VIT_CX  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method Calibrate_Ins  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+python3 generate_visualizations.py --method Calibrate_Del  --imagenet-validation-path ../../../ --vis-class target --model VIT_base_32
+
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Ins --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Del --vis-class top --model VIT_base_32
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Ins --vis-class top --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Del --vis-class top --neg --model VIT_base_32
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Ins --vis-class target --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Del --vis-class target --model VIT_base_32
+
+python3 pertubation_eval_from_hdf5.py --method IG --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method GC --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method LRP --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Transition_attn --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Bidirectional --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method TIS --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method VIT_CX --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Ins --vis-class target --neg --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Del --vis-class target --neg --model VIT_base_32
+
+
+python3 generate_visualizations.py --method Calibrate_Ordered  --imagenet-validation-path ../../../ --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Ordered --vis-class top --model VIT_base_32
+python3 pertubation_eval_from_hdf5.py --method Calibrate_Ordered --vis-class top --neg --model VIT_base_32
+
+
+----- Runtime
+
+python3 timeComparison.py --function IG --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function GC --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function LRP --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Transition_attn --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Bidirectional --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function TIS --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function VIT_CX --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Calibrate --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+python3 timeComparison.py --function IG --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function GC --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function LRP --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Transition_attn --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Bidirectional --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function TIS --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function VIT_CX --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function SHAP --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Calibrate --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+
+python3 timeComparison.py --function IG --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function GC --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function LRP --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Transition_attn --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Bidirectional --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function TIS --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function VIT_CX --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 timeComparison.py --function Calibrate --model VIT_tiny_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+
+---- Monotonicity
+
+python3 MDATestMonotonicity.py --function IG --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function GC --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function LRP --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function Transition_attn --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function Bidirectional --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function TIS --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function VIT_CX --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function Calibrate --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function Calibrate_Ins --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+python3 MDATestMonotonicity.py --function Calibrate_Del --model VIT_base_32 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
+
+
+----- Kappa test
+
+python3 evalKappaMDA.py --model VIT_base_16 --image_count 100 --imagenet ../../../ImageNet/ --gpu 0
