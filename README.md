@@ -1,4 +1,4 @@
-# MDA-Metric-Driven-Attributions-for-ViT
+# MDA - Metric-Driven Attributions for Vision Transformers
 The official implementation of "Metric-Driven Attributions for Vision Transformers" for ICLR 2025.
 
  * Official Paper - [TBR]()
